@@ -4,8 +4,11 @@ services:
       context: .
     environment:
       NODE_ENV: PRODUCTION
+      MONGO_URI: mongodb://mongo:27017/picnic-db
     ports:
       - 10000:3000
+    depends_on:
+      - mongo
   mongo:
     image: mongo:latest
     container_name: mongo
