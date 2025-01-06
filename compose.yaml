@@ -1,0 +1,18 @@
+services:
+  server:
+    build:
+      context: .
+    environment:
+      NODE_ENV: PRODUCTION
+    ports:
+      - 10000:3000
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    volumes:
+      - picnic-db:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  picnic-db:
