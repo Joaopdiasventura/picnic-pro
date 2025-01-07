@@ -17,7 +17,7 @@ describe('ItemController', () => {
       findManyByName: jest.fn(),
       findManyByCategory: jest.fn(),
       update: jest.fn(),
-      remove: jest.fn(),
+      delete: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -39,6 +39,7 @@ describe('ItemController', () => {
         name: 'Test Item',
         category: 'Test Category',
         price: 100,
+        quantity: 10,
       };
       const file = { buffer: Buffer.from('test') } as Express.Multer.File;
 
@@ -61,7 +62,7 @@ describe('ItemController', () => {
         category: 'Test Category',
         pictureUrl: 'https://example.com/image.jpg',
         price: 100,
-        avaliable: true,
+        quantity: 10,
       } as Item);
 
       const result = await controller.findById(id);
@@ -73,7 +74,7 @@ describe('ItemController', () => {
         category: 'Test Category',
         pictureUrl: 'https://example.com/image.jpg',
         price: 100,
-        avaliable: true,
+        quantity: 10,
       } as Item);
     });
   });
@@ -89,7 +90,7 @@ describe('ItemController', () => {
           category: 'Test Category',
           pictureUrl: 'https://example.com/image.jpg',
           price: 100,
-          avaliable: true,
+          quantity: 10,
         } as Item,
       ]);
 
@@ -103,7 +104,7 @@ describe('ItemController', () => {
           category: 'Test Category',
           pictureUrl: 'https://example.com/image.jpg',
           price: 100,
-          avaliable: true,
+          quantity: 10,
         } as Item,
       ]);
     });
@@ -121,7 +122,7 @@ describe('ItemController', () => {
           category: 'Test Category',
           pictureUrl: 'https://example.com/image.jpg',
           price: 100,
-          avaliable: true,
+          quantity: 10,
         } as Item,
       ]);
 
@@ -135,7 +136,7 @@ describe('ItemController', () => {
           category: 'Test Category',
           pictureUrl: 'https://example.com/image.jpg',
           price: 100,
-          avaliable: true,
+          quantity: 10,
         } as Item,
       ]);
     });
@@ -153,7 +154,7 @@ describe('ItemController', () => {
           category,
           pictureUrl: 'https://example.com/image.jpg',
           price: 100,
-          avaliable: true,
+          quantity: 10,
         } as Item,
       ]);
 
@@ -167,7 +168,7 @@ describe('ItemController', () => {
           category,
           pictureUrl: 'https://example.com/image.jpg',
           price: 100,
-          avaliable: true,
+          quantity: 10,
         } as Item,
       ]);
     });
@@ -190,17 +191,17 @@ describe('ItemController', () => {
     });
   });
 
-  describe('remove', () => {
-    it('should call service.remove with correct id', async () => {
+  describe('delete', () => {
+    it('should call service.delete with correct id', async () => {
       const id = '1';
 
       jest
-        .spyOn(service, 'remove')
+        .spyOn(service, 'delete')
         .mockResolvedValue({ message: 'Deleted successfully' });
 
-      const result = await controller.remove(id);
+      const result = await controller.delete(id);
 
-      expect(service.remove).toHaveBeenCalledWith(id);
+      expect(service.delete).toHaveBeenCalledWith(id);
       expect(result).toEqual({ message: 'Deleted successfully' });
     });
   });

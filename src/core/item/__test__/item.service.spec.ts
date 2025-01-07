@@ -52,6 +52,7 @@ describe('ItemService', () => {
         name: 'Test Item',
         category: 'Test Category',
         price: 100,
+        quantity: 10,
       };
       const file = { buffer: Buffer.from('test') } as Express.Multer.File;
 
@@ -73,6 +74,7 @@ describe('ItemService', () => {
         name: 'Test Item',
         category: 'Test Category',
         price: 100,
+        quantity: 10,
       };
 
       await expect(service.create(createItemDto, null)).rejects.toThrow(
@@ -85,6 +87,7 @@ describe('ItemService', () => {
         name: 'Test Item',
         category: 'Test Category',
         price: 100,
+        quantity: 10,
       };
 
       const file = { buffer: Buffer.from('test') } as Express.Multer.File;
@@ -95,7 +98,7 @@ describe('ItemService', () => {
         category: 'Test Category',
         pictureUrl: 'https://example.com/image.jpg',
         price: 100,
-        avaliable: true,
+        quantity: 10,
       } as Item;
 
       jest
@@ -116,7 +119,7 @@ describe('ItemService', () => {
         category: 'Test Category',
         pictureUrl: 'https://example.com/image.jpg',
         price: 100,
-        avaliable: true,
+        quantity: 10,
       } as Item;
 
       jest.spyOn(itemRepository, 'findById').mockResolvedValue(item);
@@ -144,7 +147,7 @@ describe('ItemService', () => {
         category: 'Test Category',
         pictureUrl: 'https://example.com/image.jpg',
         price: 100,
-        avaliable: true,
+        quantity: 10,
       } as Item;
 
       jest.spyOn(service, 'findById').mockResolvedValue(existingItem);
@@ -165,7 +168,7 @@ describe('ItemService', () => {
         category: 'Test Category',
         pictureUrl: 'https://example.com/image.jpg',
         price: 100,
-        avaliable: true,
+        quantity: 10,
       } as Item;
 
       jest.spyOn(service, 'findById').mockResolvedValue(existingItem);
@@ -179,8 +182,8 @@ describe('ItemService', () => {
     });
   });
 
-  describe('remove', () => {
-    it('should remove an item successfully', async () => {
+  describe('delete', () => {
+    it('should delete an item successfully', async () => {
       const id = '1';
       const existingItem = {
         id: '1',
@@ -188,16 +191,18 @@ describe('ItemService', () => {
         category: 'Test Category',
         pictureUrl: 'https://example.com/image.jpg',
         price: 100,
-        avaliable: true,
+        quantity: 10,
       } as Item;
 
       jest.spyOn(service, 'findById').mockResolvedValue(existingItem);
       jest.spyOn(imageService, 'delete').mockResolvedValue(undefined);
       jest.spyOn(itemRepository, 'delete').mockResolvedValue(undefined);
 
-      const result = await service.remove(id);
+      const result = await service.delete(id);
 
-      expect(imageService.delete).toHaveBeenCalledWith('https://example.com/image.jpg');
+      expect(imageService.delete).toHaveBeenCalledWith(
+        'https://example.com/image.jpg',
+      );
       expect(itemRepository.delete).toHaveBeenCalledWith(id);
       expect(result).toEqual({ message: 'Item removido com sucesso' });
     });
@@ -207,7 +212,7 @@ describe('ItemService', () => {
         .spyOn(service, 'findById')
         .mockRejectedValue(new NotFoundException());
 
-      await expect(service.remove('1')).rejects.toThrow(NotFoundException);
+      await expect(service.delete('1')).rejects.toThrow(NotFoundException);
     });
   });
 });

@@ -16,5 +16,6 @@ import { MongoItemRepository } from './repositories/item.mongo.repository';
     ItemService,
     { provide: 'ItemRepository', useClass: MongoItemRepository },
   ],
+  exports: [ItemService],
 })
 export class ItemModule {}

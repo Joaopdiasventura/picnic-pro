@@ -36,7 +36,7 @@ export class ItemController {
 
   @Get('findMany/:page')
   public findMany(@Param('page', ParseIntPipe) page: number) {
-    return this.itemService.findMany(page);
+    return this.itemService.findMany(page < 0 ? 0 : page);
   }
 
   @Get('findManyByName/:name/:page')
@@ -44,7 +44,7 @@ export class ItemController {
     @Param('name') name: string,
     @Param('page', ParseIntPipe) page: number,
   ) {
-    return this.itemService.findManyByName(name, page);
+    return this.itemService.findManyByName(name, page < 0 ? 0 : page);
   }
 
   @Get('findManyByCategory/:category/:page')
@@ -52,7 +52,7 @@ export class ItemController {
     @Param('category') category: string,
     @Param('page', ParseIntPipe) page: number,
   ) {
-    return this.itemService.findManyByCategory(category, page);
+    return this.itemService.findManyByCategory(category, page < 0 ? 0 : page);
   }
 
   @Patch(':id')
@@ -66,7 +66,7 @@ export class ItemController {
   }
 
   @Delete(':id')
-  public remove(@Param('id', ParseObjectIdPipe) id: string) {
-    return this.itemService.remove(id);
+  public delete(@Param('id', ParseObjectIdPipe) id: string) {
+    return this.itemService.delete(id);
   }
 }

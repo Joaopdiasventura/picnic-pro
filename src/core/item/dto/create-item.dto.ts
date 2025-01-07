@@ -13,11 +13,14 @@ export class CreateItemDto {
   @IsNotEmpty({ message: 'Digite um preço válido' })
   @IsNumber({}, { message: 'Digite um preço válido' })
   @Min(1, { message: 'Digite um preço maior que R$ 1,00' })
-  @Transform(
-    ({ value }) => (typeof value != 'number' ? parseFloat(value) : value),
-    { toClassOnly: true },
-  )
+  @Transform(({ value }) => parseFloat(value), { toClassOnly: true })
   price: number;
+
+  @IsNotEmpty({ message: 'Digite uma quantidade válida' })
+  @IsNumber({}, { message: 'Digite uma quantidade válida' })
+  @Min(1, { message: 'Digite uma quantidade maior que 1' })
+  @Transform(({ value }) => parseInt(value), { toClassOnly: true })
+  quantity: number;
 
   pictureUrl?: string;
 }

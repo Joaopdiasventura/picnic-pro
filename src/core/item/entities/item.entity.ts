@@ -15,8 +15,8 @@ export class Item extends Document {
   @Prop({ required: true })
   price: number;
 
-  @Prop({ default: true })
-  avaliable: boolean;
+  @Prop({ required: true })
+  quantity: number;
 }
 
 export const ItemSchema = SchemaFactory.createForClass(Item);

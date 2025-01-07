@@ -18,7 +18,7 @@ export class ItemService {
     private readonly imageService: ImageService,
   ) {}
 
-  async create(
+  public async create(
     createItemDto: CreateItemDto,
     file: Express.Multer.File,
   ): Promise<Message> {
@@ -80,7 +80,7 @@ export class ItemService {
     return { message: 'Item atualizado com sucesso' };
   }
 
-  public async remove(id: string): Promise<Message> {
+  public async delete(id: string): Promise<Message> {
     const { pictureUrl } = await this.findById(id);
 
     await this.imageService.delete(pictureUrl);
