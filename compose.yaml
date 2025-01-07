@@ -3,7 +3,7 @@ services:
     build:
       context: .
     environment:
-      NODE_ENV: PRODUCTION
+      NODE_ENV: DEVELOPMENT
       MONGO_URI: mongodb://mongo:27017/picnic-db
     ports:
       - 10000:3000
