@@ -1,13 +1,13 @@
-import { InjectModel } from '@nestjs/mongoose';
-import { CreateDiscountDto } from '../dto/create-discount.dto';
-import { UpdateDiscountDto } from '../dto/update-discount.dto';
-import { Discount } from '../entities/discount.entity';
-import { DiscountRepository } from './discount.repository';
-import { Model } from 'mongoose';
+import { InjectModel } from "@nestjs/mongoose";
+import { CreateDiscountDto } from "../dto/create-discount.dto";
+import { UpdateDiscountDto } from "../dto/update-discount.dto";
+import { Discount } from "../entities/discount.entity";
+import { DiscountRepository } from "./discount.repository";
+import { Model } from "mongoose";
 
 export class MongoDiscountRepository implements DiscountRepository {
   constructor(
-    @InjectModel('Discount') private readonly discountModel: Model<Discount>,
+    @InjectModel("Discount") private readonly discountModel: Model<Discount>,
   ) {}
 
   public async create(createDiscountDto: CreateDiscountDto): Promise<Discount> {
@@ -23,7 +23,7 @@ export class MongoDiscountRepository implements DiscountRepository {
       .find()
       .skip(10 * page)
       .limit(10)
-      .populate({ path: 'item', select: 'name pictureUrl' })
+      .populate({ path: "item", select: "name pictureUrl" })
       .exec();
   }
 
@@ -32,7 +32,7 @@ export class MongoDiscountRepository implements DiscountRepository {
       .find({ item })
       .skip(10 * page)
       .limit(10)
-      .populate('item')
+      .populate("item")
       .exec();
   }
 
@@ -40,7 +40,7 @@ export class MongoDiscountRepository implements DiscountRepository {
     return await this.discountModel
       .find({ item })
       .sort({ value: -1 })
-      .populate('item')
+      .populate("item")
       .exec();
   }
 

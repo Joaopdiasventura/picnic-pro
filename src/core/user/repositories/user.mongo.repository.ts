@@ -1,12 +1,12 @@
-import { InjectModel } from '@nestjs/mongoose';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
-import { User } from '../entities/user.entity';
-import { UserRepository } from './user.repository';
-import { Model } from 'mongoose';
+import { InjectModel } from "@nestjs/mongoose";
+import { CreateUserDto } from "../dto/create-user.dto";
+import { UpdateUserDto } from "../dto/update-user.dto";
+import { User } from "../entities/user.entity";
+import { UserRepository } from "./user.repository";
+import { Model } from "mongoose";
 
 export class MongoUserRepository implements UserRepository {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(@InjectModel("User") private readonly userModel: Model<User>) {}
 
   public async create(createUserDto: CreateUserDto): Promise<User> {
     return this.userModel.create(createUserDto);

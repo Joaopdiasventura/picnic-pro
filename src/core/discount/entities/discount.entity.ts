@@ -1,7 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { DiscountRule } from '../../../shared/types/discount-rules';
-import { Item } from '../../item/entities/item.entity';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document } from "mongoose";
+import { DiscountRule } from "../../../shared/types/discount-rules";
+import { Item } from "../../item/entities/item.entity";
 
 @Schema({ versionKey: false })
 export class Discount extends Document {
@@ -14,7 +14,7 @@ export class Discount extends Document {
   @Prop({ required: true })
   rule: DiscountRule;
 
-  @Prop({ required: true, type: String, ref: 'Item' })
+  @Prop({ required: true, type: String, ref: "Item" })
   item: string | Item;
 }
 

@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from '../user.controller';
-import { UserService } from '../user.service';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { LoginUserDto } from '../dto/login-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
+import { Test, TestingModule } from "@nestjs/testing";
+import { UserController } from "../user.controller";
+import { UserService } from "../user.service";
+import { CreateUserDto } from "../dto/create-user.dto";
+import { LoginUserDto } from "../dto/login-user.dto";
+import { UpdateUserDto } from "../dto/update-user.dto";
 
 const mockUserService = {
   create: jest.fn(),
@@ -13,7 +13,7 @@ const mockUserService = {
   delete: jest.fn(),
 };
 
-describe('UserController', () => {
+describe("UserController", () => {
   let controller: UserController;
 
   beforeEach(async () => {
@@ -25,25 +25,25 @@ describe('UserController', () => {
     controller = module.get<UserController>(UserController);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a user', async () => {
+  describe("create", () => {
+    it("should create a user", async () => {
       const dto: CreateUserDto = {
-        name: 'test',
-        email: 'test@example.com',
-        password: 'password123',
+        name: "test",
+        email: "test@example.com",
+        password: "password123",
       };
 
       const result = {
-        message: 'Usuário criado com sucesso',
-        token: 'token',
+        message: "Usuário criado com sucesso",
+        token: "token",
         user: {
-          _id: '1',
-          name: 'test',
-          email: 'test@example.com',
+          _id: "1",
+          name: "test",
+          email: "test@example.com",
         },
       };
 
@@ -54,19 +54,19 @@ describe('UserController', () => {
     });
   });
 
-  describe('login', () => {
-    it('should login a user', async () => {
+  describe("login", () => {
+    it("should login a user", async () => {
       const dto: LoginUserDto = {
-        email: 'test@example.com',
-        password: 'password123',
+        email: "test@example.com",
+        password: "password123",
       };
       const result = {
-        message: 'Login realizado com sucesso',
-        token: 'token',
+        message: "Login realizado com sucesso",
+        token: "token",
         user: {
-          _id: '1',
-          name: 'test',
-          email: 'test@example.com',
+          _id: "1",
+          name: "test",
+          email: "test@example.com",
         },
       };
 
@@ -77,10 +77,10 @@ describe('UserController', () => {
     });
   });
 
-  describe('decodeToken', () => {
-    it('should decode a token', async () => {
-      const token = 'someToken';
-      const decodedUser = { id: '1', name: 'test', email: 'test@example.com' };
+  describe("decodeToken", () => {
+    it("should decode a token", async () => {
+      const token = "someToken";
+      const decodedUser = { id: "1", name: "test", email: "test@example.com" };
 
       mockUserService.decodeToken.mockResolvedValue(decodedUser);
 
@@ -89,11 +89,11 @@ describe('UserController', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update a user', async () => {
-      const id = '1';
-      const dto: UpdateUserDto = { name: 'test Updated' };
-      const result = { message: 'Usuário atualizado com sucesso' };
+  describe("update", () => {
+    it("should update a user", async () => {
+      const id = "1";
+      const dto: UpdateUserDto = { name: "test Updated" };
+      const result = { message: "Usuário atualizado com sucesso" };
 
       mockUserService.update.mockResolvedValue(result);
 
@@ -102,10 +102,10 @@ describe('UserController', () => {
     });
   });
 
-  describe('delete', () => {
-    it('should delete a user', async () => {
-      const id = '1';
-      const result = { message: 'Usuário deletado com sucesso' };
+  describe("delete", () => {
+    it("should delete a user", async () => {
+      const id = "1";
+      const result = { message: "Usuário deletado com sucesso" };
 
       mockUserService.delete.mockResolvedValue(result);
 

@@ -1,6 +1,6 @@
-import { Discount } from '../entities/discount.entity';
-import { CreateDiscountDto } from './../dto/create-discount.dto';
-import { UpdateDiscountDto } from './../dto/update-discount.dto';
+import { Discount } from "../entities/discount.entity";
+import { CreateDiscountDto } from "./../dto/create-discount.dto";
+import { UpdateDiscountDto } from "./../dto/update-discount.dto";
 
 export interface DiscountRepository {
   create(createDiscountDto: CreateDiscountDto): Promise<Discount>;

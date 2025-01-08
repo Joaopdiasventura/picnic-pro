@@ -1,6 +1,6 @@
-import { Item } from '../entities/item.entity';
-import { CreateItemDto } from '../dto/create-item.dto';
-import { UpdateItemDto } from '../dto/update-item.dto';
+import { Item } from "../entities/item.entity";
+import { CreateItemDto } from "../dto/create-item.dto";
+import { UpdateItemDto } from "../dto/update-item.dto";
 
 export interface ItemRepository {
   create(createItemDto: CreateItemDto): Promise<Item>;
