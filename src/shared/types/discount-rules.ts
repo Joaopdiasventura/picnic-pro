@@ -1,17 +1,17 @@
-import { registerDecorator, ValidationOptions } from 'class-validator';
+import { registerDecorator, ValidationOptions } from "class-validator";
 
 export type DiscountRule = `> ${number}` | `< ${number}`;
 
 export function IsDiscountRule(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string): void {
     registerDecorator({
-      name: 'isDiscountRules',
+      name: "isDiscountRules",
       target: object.constructor,
       propertyName,
       options: validationOptions,
       validator: {
         validate(value: string) {
-          if (typeof value == 'string') return /^\s*[><] \s*\d+$/.test(value);
+          if (typeof value == "string") return /^\s*[><] \s*\d+$/.test(value);
 
           return false;
         },

@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Module } from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { JwtModule } from "@nestjs/jwt";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
@@ -9,7 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('jwtSecret'),
+        secret: configService.get<string>("jwtSecret"),
       }),
     }),
   ],

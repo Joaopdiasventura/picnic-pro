@@ -3,20 +3,20 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { CreateDiscountDto } from './dto/create-discount.dto';
-import { UpdateDiscountDto } from './dto/update-discount.dto';
-import { DiscountRepository } from './repositories/discount.repository';
-import { ItemService } from '../item/item.service';
-import { Message } from '../../shared/interfaces/message';
-import { Discount } from './entities/discount.entity';
-import { DiscountReturn } from '../../shared/interfaces/discountReturn';
-import { Item } from '../item/entities/item.entity';
+} from "@nestjs/common";
+import { CreateDiscountDto } from "./dto/create-discount.dto";
+import { UpdateDiscountDto } from "./dto/update-discount.dto";
+import { DiscountRepository } from "./repositories/discount.repository";
+import { ItemService } from "../item/item.service";
+import { Message } from "../../shared/interfaces/message";
+import { Discount } from "./entities/discount.entity";
+import { DiscountReturn } from "../../shared/interfaces/discountReturn";
+import { Item } from "../item/entities/item.entity";
 
 @Injectable()
 export class DiscountService {
   constructor(
-    @Inject('DiscountRepository')
+    @Inject("DiscountRepository")
     private readonly discountRepository: DiscountRepository,
     private readonly itemService: ItemService,
   ) {}
@@ -24,12 +24,12 @@ export class DiscountService {
   public async create(createDiscountDto: CreateDiscountDto): Promise<Message> {
     await this.findItem(createDiscountDto.item);
     await this.discountRepository.create(createDiscountDto);
-    return { message: 'Desconto adicionado com sucesso' };
+    return { message: "Desconto adicionado com sucesso" };
   }
 
   public async findById(id: string): Promise<Discount> {
     const discount = await this.discountRepository.findById(id);
-    if (!discount) throw new NotFoundException('Desconto não encontrado');
+    if (!discount) throw new NotFoundException("Desconto não encontrado");
     return discount;
   }
 
@@ -47,7 +47,7 @@ export class DiscountService {
     quantity: number,
   ): Promise<DiscountReturn> {
     if (quantity < 1)
-      throw new BadRequestException('Quantidade de itens inválida');
+      throw new BadRequestException("Quantidade de itens inválida");
 
     const { price } = await this.findItem(item);
 
@@ -55,12 +55,12 @@ export class DiscountService {
 
     const maxDiscount = ((): number => {
       for (const discount of discounts) {
-        const [operator, ruleQuantity] = discount.rule.split(' ');
+        const [operator, ruleQuantity] = discount.rule.split(" ");
         const parsedQuantity = parseInt(ruleQuantity, 10);
 
         const isValidRule =
-          (operator == '>' && quantity > parsedQuantity) ||
-          (operator == '<' && quantity < parsedQuantity);
+          (operator == ">" && quantity > parsedQuantity) ||
+          (operator == "<" && quantity < parsedQuantity);
 
         if (isValidRule)
           return Math.round((discount.value / 100) * price * 100) / 100;
@@ -83,13 +83,13 @@ export class DiscountService {
     updateDiscountDto.lastChange = new Date();
     await this.discountRepository.update(id, updateDiscountDto);
 
-    return { message: 'Desconto atualizado com sucesso' };
+    return { message: "Desconto atualizado com sucesso" };
   }
 
   public async delete(id: string): Promise<Message> {
     await this.findById(id);
     await this.discountRepository.delete(id);
-    return { message: 'Desconto removido com sucesso' };
+    return { message: "Desconto removido com sucesso" };
   }
 
   private async findItem(item: string): Promise<Item> {

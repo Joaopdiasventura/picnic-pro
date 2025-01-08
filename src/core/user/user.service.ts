@@ -3,20 +3,20 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { UserRepository } from './repositories/user.repository';
-import { AuthService } from '../../shared/modules/auth/auth.service';
-import { AuthMessage } from '../../shared/interfaces/authMessage';
-import { Message } from '../../shared/interfaces/message';
-import { User } from './entities/user.entity';
+} from "@nestjs/common";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { LoginUserDto } from "./dto/login-user.dto";
+import { UserRepository } from "./repositories/user.repository";
+import { AuthService } from "../../shared/modules/auth/auth.service";
+import { AuthMessage } from "../../shared/interfaces/authMessage";
+import { Message } from "../../shared/interfaces/message";
+import { User } from "./entities/user.entity";
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject('UserRepository') private readonly userRepository: UserRepository,
+    @Inject("UserRepository") private readonly userRepository: UserRepository,
     private readonly authService: AuthService,
   ) {}
 
@@ -34,7 +34,7 @@ export class UserService {
 
     const token = await this.authService.generateToken(user.id);
 
-    return { message: 'Usuário criado com sucesso', token, user: userObject };
+    return { message: "Usuário criado com sucesso", token, user: userObject };
   }
 
   public async login(loginUserDto: LoginUserDto): Promise<AuthMessage> {
@@ -50,7 +50,7 @@ export class UserService {
 
     const token = await this.authService.generateToken(user.id);
 
-    return { message: 'Login realizado com sucesso', token, user: userObject };
+    return { message: "Login realizado com sucesso", token, user: userObject };
   }
 
   public async decodeToken(token: string): Promise<User> {
@@ -65,7 +65,7 @@ export class UserService {
 
   public async findById(id: string): Promise<User> {
     const user = await this.userRepository.findById(id);
-    if (!user) throw new NotFoundException('Usuário não encontrado');
+    if (!user) throw new NotFoundException("Usuário não encontrado");
     return user;
   }
 
@@ -84,24 +84,24 @@ export class UserService {
       );
 
     await this.userRepository.update(id, updateUserDto);
-    return { message: 'Usuário atualizado com sucesso' };
+    return { message: "Usuário atualizado com sucesso" };
   }
 
   public async delete(id: string): Promise<Message> {
     await this.findById(id);
     await this.userRepository.delete(id);
-    return { message: 'Usuário atualizado com sucesso' };
+    return { message: "Usuário atualizado com sucesso" };
   }
 
   private async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new NotFoundException('Usuário não encontrado');
+    if (!user) throw new NotFoundException("Usuário não encontrado");
     return user;
   }
 
   private async throwIfEmailIsUsed(email: string): Promise<void> {
     const user = await this.userRepository.findByEmail(email);
     if (user)
-      throw new BadRequestException('Esse email já está sendo utilizado');
+      throw new BadRequestException("Esse email já está sendo utilizado");
   }
 }

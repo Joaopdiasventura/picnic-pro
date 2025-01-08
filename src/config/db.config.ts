@@ -1,5 +1,5 @@
 export const DatabaseConfig = (): DatabaseConfigInterface => ({
-  mongo: { uri: process.env.MONGO_URI || 'mongodb://localhost:27017/picnic' },
+  mongo: { uri: process.env.MONGO_URI || "mongodb://localhost:27017/picnic" },
   aws: {
     region: process.env.AWS_REGION,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,

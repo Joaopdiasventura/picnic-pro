@@ -1,26 +1,26 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { DiscountController } from '../discount.controller';
-import { DiscountService } from '../discount.service';
-import { CreateDiscountDto } from '../dto/create-discount.dto';
-import { UpdateDiscountDto } from '../dto/update-discount.dto';
-import { Discount } from '../entities/discount.entity';
-import { DiscountReturn } from '../../../shared/interfaces/discountReturn';
-import { Message } from '../../../shared/interfaces/message';
-import { NotFoundException } from '@nestjs/common';
+import { Test, TestingModule } from "@nestjs/testing";
+import { DiscountController } from "../discount.controller";
+import { DiscountService } from "../discount.service";
+import { CreateDiscountDto } from "../dto/create-discount.dto";
+import { UpdateDiscountDto } from "../dto/update-discount.dto";
+import { Discount } from "../entities/discount.entity";
+import { DiscountReturn } from "../../../shared/interfaces/discountReturn";
+import { Message } from "../../../shared/interfaces/message";
+import { NotFoundException } from "@nestjs/common";
 
-describe('DiscountController', () => {
+describe("DiscountController", () => {
   let controller: DiscountController;
   let service: DiscountService;
 
   const mockedDiscount = {
-    _id: 'id1',
+    _id: "id1",
     value: 75,
-    rule: '> 95',
-    item: 'id2',
+    rule: "> 95",
+    item: "id2",
     lastChange: new Date(),
   } as unknown as Discount;
 
-  const mockMessage: Message = { message: 'Sucesso' };
+  const mockMessage: Message = { message: "Sucesso" };
 
   const mockDiscountReturn: DiscountReturn = { value: 150 };
 
@@ -47,13 +47,13 @@ describe('DiscountController', () => {
     service = module.get<DiscountService>(DiscountService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a discount', async () => {
-      const dto: CreateDiscountDto = { item: 'item1', value: 10, rule: '> 5' };
+  describe("create", () => {
+    it("should create a discount", async () => {
+      const dto: CreateDiscountDto = { item: "item1", value: 10, rule: "> 5" };
 
       const result = await controller.create(dto);
 
@@ -62,27 +62,27 @@ describe('DiscountController', () => {
     });
   });
 
-  describe('findById', () => {
-    it('should return a discount', async () => {
-      const result = await controller.findById('id1');
+  describe("findById", () => {
+    it("should return a discount", async () => {
+      const result = await controller.findById("id1");
 
-      expect(service.findById).toHaveBeenCalledWith('id1');
+      expect(service.findById).toHaveBeenCalledWith("id1");
       expect(result).toEqual(mockedDiscount);
     });
 
-    it('should throw NotFoundException if discount is not found', async () => {
+    it("should throw NotFoundException if discount is not found", async () => {
       jest
-        .spyOn(service, 'findById')
+        .spyOn(service, "findById")
         .mockRejectedValue(new NotFoundException());
 
-      await expect(controller.findById('id2')).rejects.toThrow(
+      await expect(controller.findById("id2")).rejects.toThrow(
         NotFoundException,
       );
     });
   });
 
-  describe('findMany', () => {
-    it('should return a list of discounts', async () => {
+  describe("findMany", () => {
+    it("should return a list of discounts", async () => {
       const result = await controller.findMany(1);
 
       expect(service.findMany).toHaveBeenCalledWith(1);
@@ -90,40 +90,40 @@ describe('DiscountController', () => {
     });
   });
 
-  describe('findManyByItem', () => {
-    it('should return a list of discounts by item', async () => {
-      const result = await controller.findManyByItem('item1', 1);
+  describe("findManyByItem", () => {
+    it("should return a list of discounts by item", async () => {
+      const result = await controller.findManyByItem("item1", 1);
 
-      expect(service.findManyByItem).toHaveBeenCalledWith('item1', 1);
+      expect(service.findManyByItem).toHaveBeenCalledWith("item1", 1);
       expect(result).toEqual([mockedDiscount]);
     });
   });
 
-  describe('applyDiscount', () => {
-    it('should apply a discount', async () => {
-      const result = await controller.applyDiscount('item1', 15);
+  describe("applyDiscount", () => {
+    it("should apply a discount", async () => {
+      const result = await controller.applyDiscount("item1", 15);
 
-      expect(service.applyDiscount).toHaveBeenCalledWith('item1', 15);
+      expect(service.applyDiscount).toHaveBeenCalledWith("item1", 15);
       expect(result).toEqual(mockDiscountReturn);
     });
   });
 
-  describe('update', () => {
-    it('should update a discount', async () => {
-      const dto: UpdateDiscountDto = { value: 15, rule: '> 10' };
+  describe("update", () => {
+    it("should update a discount", async () => {
+      const dto: UpdateDiscountDto = { value: 15, rule: "> 10" };
 
-      const result = await controller.update('id1', dto);
+      const result = await controller.update("id1", dto);
 
-      expect(service.update).toHaveBeenCalledWith('id1', dto);
+      expect(service.update).toHaveBeenCalledWith("id1", dto);
       expect(result).toEqual(mockMessage);
     });
   });
 
-  describe('delete', () => {
-    it('should delete a discount', async () => {
-      const result = await controller.delete('id1');
+  describe("delete", () => {
+    it("should delete a discount", async () => {
+      const result = await controller.delete("id1");
 
-      expect(service.delete).toHaveBeenCalledWith('id1');
+      expect(service.delete).toHaveBeenCalledWith("id1");
       expect(result).toEqual(mockMessage);
     });
   });

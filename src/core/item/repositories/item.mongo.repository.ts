@@ -1,12 +1,12 @@
-import { InjectModel } from '@nestjs/mongoose';
-import { CreateItemDto } from '../dto/create-item.dto';
-import { UpdateItemDto } from '../dto/update-item.dto';
-import { Item } from '../entities/item.entity';
-import { ItemRepository } from './item.repository';
-import { Model } from 'mongoose';
+import { InjectModel } from "@nestjs/mongoose";
+import { CreateItemDto } from "../dto/create-item.dto";
+import { UpdateItemDto } from "../dto/update-item.dto";
+import { Item } from "../entities/item.entity";
+import { ItemRepository } from "./item.repository";
+import { Model } from "mongoose";
 
 export class MongoItemRepository implements ItemRepository {
-  constructor(@InjectModel('Item') private readonly itemModel: Model<Item>) {}
+  constructor(@InjectModel("Item") private readonly itemModel: Model<Item>) {}
 
   public async create(createItemDto: CreateItemDto): Promise<Item> {
     return await this.itemModel.create(createItemDto);
@@ -33,7 +33,7 @@ export class MongoItemRepository implements ItemRepository {
 
   public async findManyByName(name: string, page: number): Promise<Item[]> {
     return await this.itemModel
-      .find({ name: { $regex: name, $options: 'i' } })
+      .find({ name: { $regex: name, $options: "i" } })
       .skip(10 * page)
       .limit(10)
       .exec();

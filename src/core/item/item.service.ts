@@ -3,18 +3,18 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { CreateItemDto } from './dto/create-item.dto';
-import { UpdateItemDto } from './dto/update-item.dto';
-import { ItemRepository } from './repositories/item.repository';
-import { ImageService } from '../../shared/services/image/image.service';
-import { Message } from '../../shared/interfaces/message';
-import { Item } from './entities/item.entity';
+} from "@nestjs/common";
+import { CreateItemDto } from "./dto/create-item.dto";
+import { UpdateItemDto } from "./dto/update-item.dto";
+import { ItemRepository } from "./repositories/item.repository";
+import { ImageService } from "../../shared/services/image/image.service";
+import { Message } from "../../shared/interfaces/message";
+import { Item } from "./entities/item.entity";
 
 @Injectable()
 export class ItemService {
   constructor(
-    @Inject('ItemRepository') private readonly itemRepository: ItemRepository,
+    @Inject("ItemRepository") private readonly itemRepository: ItemRepository,
     private readonly imageService: ImageService,
   ) {}
 
@@ -22,18 +22,18 @@ export class ItemService {
     createItemDto: CreateItemDto,
     file: Express.Multer.File,
   ): Promise<Message> {
-    if (!file) throw new BadRequestException('Envie uma imagem para o item');
+    if (!file) throw new BadRequestException("Envie uma imagem para o item");
     await this.throwIfItemExist(createItemDto.name, createItemDto.category);
 
     createItemDto.pictureUrl = await this.imageService.upload(file);
 
     await this.itemRepository.create(createItemDto);
-    return { message: 'Item adicionado com sucesso' };
+    return { message: "Item adicionado com sucesso" };
   }
 
   public async findById(id: string): Promise<Item> {
     const item = await this.itemRepository.findById(id);
-    if (!item) throw new NotFoundException('Item não encontrado');
+    if (!item) throw new NotFoundException("Item não encontrado");
     return item;
   }
 
@@ -77,7 +77,7 @@ export class ItemService {
     }
 
     await this.itemRepository.update(id, updateItemDto);
-    return { message: 'Item atualizado com sucesso' };
+    return { message: "Item atualizado com sucesso" };
   }
 
   public async delete(id: string): Promise<Message> {
@@ -86,7 +86,7 @@ export class ItemService {
     await this.imageService.delete(pictureUrl);
     await this.itemRepository.delete(id);
 
-    return { message: 'Item removido com sucesso' };
+    return { message: "Item removido com sucesso" };
   }
 
   private async throwIfItemExist(
@@ -98,6 +98,6 @@ export class ItemService {
       category,
     );
 
-    if (item) throw new BadRequestException('Esse item já existe');
+    if (item) throw new BadRequestException("Esse item já existe");
   }
 }

@@ -2,10 +2,10 @@ import {
   Injectable,
   BadRequestException,
   UnauthorizedException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { hash, compare } from 'bcrypt';
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
+import { hash, compare } from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -22,12 +22,12 @@ export class AuthService {
     try {
       return String(await this.jwtService.verifyAsync(token));
     } catch {
-      throw new BadRequestException('Faça login novamente');
+      throw new BadRequestException("Faça login novamente");
     }
   }
 
   public async hashPassword(password: string): Promise<string> {
-    const saltRounds = this.configService.get<number>('salts');
+    const saltRounds = this.configService.get<number>("salts");
     return hash(password, saltRounds);
   }
 
@@ -36,6 +36,6 @@ export class AuthService {
     hashedPassword: string,
   ): Promise<void> {
     const isValid = await compare(password, hashedPassword);
-    if (!isValid) throw new UnauthorizedException('Senha incorreta');
+    if (!isValid) throw new UnauthorizedException("Senha incorreta");
   }
 }
