@@ -10,9 +10,8 @@ export function IsDiscountRule(validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any) {
-          if (typeof value == 'string')
-            return /^\s*[><] \s*\d+$/.test(value);
+        validate(value: string) {
+          if (typeof value == 'string') return /^\s*[><] \s*\d+$/.test(value);
 
           return false;
         },

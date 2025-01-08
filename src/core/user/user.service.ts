@@ -22,7 +22,7 @@ export class UserService {
 
   public async create(createUserDto: CreateUserDto): Promise<AuthMessage> {
     await this.throwIfEmailIsUsed(createUserDto.email);
-    
+
     createUserDto.password = await this.authService.hashPassword(
       createUserDto.password,
     );
@@ -93,13 +93,13 @@ export class UserService {
     return { message: 'Usuário atualizado com sucesso' };
   }
 
-  private async findByEmail(email: string) {
+  private async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotFoundException('Usuário não encontrado');
     return user;
   }
 
-  private async throwIfEmailIsUsed(email: string) {
+  private async throwIfEmailIsUsed(email: string): Promise<void> {
     const user = await this.userRepository.findByEmail(email);
     if (user)
       throw new BadRequestException('Esse email já está sendo utilizado');

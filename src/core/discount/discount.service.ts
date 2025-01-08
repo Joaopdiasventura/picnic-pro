@@ -11,6 +11,7 @@ import { ItemService } from '../item/item.service';
 import { Message } from '../../shared/interfaces/message';
 import { Discount } from './entities/discount.entity';
 import { DiscountReturn } from '../../shared/interfaces/discountReturn';
+import { Item } from '../item/entities/item.entity';
 
 @Injectable()
 export class DiscountService {
@@ -52,7 +53,7 @@ export class DiscountService {
 
     const discounts = await this.discountRepository.findAllByItemSorted(item);
 
-    const maxDiscount = (() => {
+    const maxDiscount = ((): number => {
       for (const discount of discounts) {
         const [operator, ruleQuantity] = discount.rule.split(' ');
         const parsedQuantity = parseInt(ruleQuantity, 10);
@@ -91,7 +92,7 @@ export class DiscountService {
     return { message: 'Desconto removido com sucesso' };
   }
 
-  private async findItem(item: string) {
+  private async findItem(item: string): Promise<Item> {
     return await this.itemService.findById(item);
   }
 }

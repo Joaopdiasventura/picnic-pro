@@ -50,7 +50,9 @@ describe('AuthService', () => {
 
   describe('decodeToken', () => {
     it('should decode a token successfully', async () => {
-      jest.spyOn(jwtService, 'verifyAsync').mockImplementation(() => 'userId' as any);
+      jest
+        .spyOn(jwtService, 'verifyAsync')
+        .mockImplementation(async () => 'userId' as unknown as object);
       const payload = await service.decodeToken('token');
       expect(payload).toBe('userId');
 
