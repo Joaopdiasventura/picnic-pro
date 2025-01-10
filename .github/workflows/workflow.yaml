@@ -35,13 +35,17 @@ jobs:
       - name: Checkout the files
         uses: actions/checkout@v3
 
-      - name: Copy files with SSH
-        uses: easingthemes/ssh-deploy@main
+      - name: Deploy via SSH
+        uses: easingthemes/ssh-deploy@v2.1.5
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-          ARGS: "-rltgoDzvO --delete"
-          SOURCE: "./"
           REMOTE_HOST: ${{ secrets.HOST }}
           REMOTE_USER: ${{ secrets.USER }}
-          TARGET: "./"
-          EXCLUDE: "/dist/, /node_modules/, **.env, rebuild_app.sh, watcher.sh"
+        with:
+          args: |
+            rsync -avz --exclude 'dist/' --exclude 'node_modules/' --exclude '.env' ./ ${REMOTE_USER}@${REMOTE_HOST}:/usr/src/app
+            ssh ${REMOTE_USER}@${REMOTE_HOST} << 'EOF'
+              cd /usr/src/app
+              docker-compose down
+              docker-compose up --build -d
+            EOF
