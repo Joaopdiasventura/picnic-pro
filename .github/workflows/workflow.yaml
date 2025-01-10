@@ -26,7 +26,6 @@ jobs:
           npm run lint
           npm run test
           npm run build
-
   deploy:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -35,17 +34,23 @@ jobs:
       - name: Checkout the files
         uses: actions/checkout@v3
 
-      - name: Deploy via SSH
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-          REMOTE_HOST: ${{ secrets.HOST }}
-          REMOTE_USER: ${{ secrets.USER }}
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          args: |
-            rsync -avz --exclude 'dist/' --exclude 'node_modules/' --exclude '.env' ./ ${REMOTE_USER}@${REMOTE_HOST}:/usr/src/app
-            ssh ${REMOTE_USER}@${REMOTE_HOST} << 'EOF'
-              cd /usr/src/app
-              docker-compose down
-              docker-compose up --build -d
-            EOF
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Add remote host to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via Rsync
+        run: |
+          rsync -avz --exclude 'dist/' --exclude 'node_modules/' --exclude '.env' ./ ${{ secrets.USER }}@${{ secrets.HOST }}:/usr/src/app
+
+      - name: Restart Docker Containers
+        run: |
+          ssh ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            cd /usr/src/app
+            docker-compose down
+            docker-compose up --build -d
+          EOF
