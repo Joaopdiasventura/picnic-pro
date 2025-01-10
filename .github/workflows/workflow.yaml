@@ -1,28 +1,68 @@
-name: Continuos Integration
+name: Continuous Integration and Deployment
 
 on:
   push:
     branches:
-      - main
-      - dev
+      - "**"
   pull_request:
     branches:
-      - main
-      - dev
+      - "**"
 
 jobs:
-  continuos-integration:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Using Node.js
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 22
-      - name: run install, build and test
+
+      - name: Install Dependencies, Lint, Test, and Build
         run: |
           npm install
           npm run lint
           npm run test
           npm run build
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 22
+
+      - name: Install Dependencies, Lint, Test, and Build
+        run: |
+          npm install
+          npm run lint
+          npm run test
+          npm run build
+
+      - name: Deploy to EC2 via SCP
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          source: "."
+          target: "/home/ubuntu/app"
+
+      - name: Execute Remote Commands on EC2
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd /home/ubuntu/app
+            docker-compose down
+            docker-compose up -d --build
