@@ -4,6 +4,7 @@ import { UpdateItemDto } from "../dto/update-item.dto";
 import { Item } from "../entities/item.entity";
 import { ItemRepository } from "./item.repository";
 import { Model } from "mongoose";
+import { UpdateManyItensDto } from "../dto/update-many-itens.dto";
 
 export class MongoItemRepository implements ItemRepository {
   constructor(@InjectModel("Item") private readonly itemModel: Model<Item>) {}
@@ -52,6 +53,16 @@ export class MongoItemRepository implements ItemRepository {
 
   public async update(id: string, updateItemDto: UpdateItemDto): Promise<Item> {
     return await this.itemModel.findByIdAndUpdate(id, updateItemDto);
+  }
+
+  public async updateMany(updates: UpdateManyItensDto[]): Promise<void> {
+    const bulkOperations = updates.map((update) => ({
+      updateOne: {
+        filter: { _id: update.id },
+        update: { $set: { quantity: update.quantity } },
+      },
+    }));
+    await this.itemModel.bulkWrite(bulkOperations);
   }
 
   public async delete(id: string): Promise<Item> {

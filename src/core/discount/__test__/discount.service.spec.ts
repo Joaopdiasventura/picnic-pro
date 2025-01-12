@@ -111,22 +111,20 @@ describe("DiscountService", () => {
         { value: 20, rule: "> 10" },
       ] as unknown as Discount[];
 
-      jest.spyOn(itemService, "findById").mockResolvedValue(mockedItem);
       jest
         .spyOn(discountRepository, "findAllByItemSorted")
         .mockResolvedValue(discounts.sort((a, b) => b.value - a.value));
 
-      const result = await service.applyDiscount("item1", 15);
+      const result = await service.applyDiscount("item1", 100, 15);
 
-      expect(itemService.findById).toHaveBeenCalledWith("item1");
       expect(discountRepository.findAllByItemSorted).toHaveBeenCalledWith(
         "item1",
       );
-      expect(result).toEqual({ value: 20 * 15 });
+      expect(result).toEqual({ value: mockedItem.price * 15 - 20 * 15 });
     });
 
     it("should throw BadRequestException if quantity is invalid", async () => {
-      await expect(service.applyDiscount("item1", 0)).rejects.toThrow(
+      await expect(service.applyDiscount("item1", 100, 0)).rejects.toThrow(
         BadRequestException,
       );
     });

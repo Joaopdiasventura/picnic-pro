@@ -16,5 +16,6 @@ import { AuthModule } from "../../shared/modules/auth/auth.module";
     UserService,
     { provide: "UserRepository", useClass: MongoUserRepository },
   ],
+  exports: [UserService],
 })
 export class UserModule {}

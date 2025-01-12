@@ -33,6 +33,9 @@ export class AddressService {
       if (!response.ok) throw new Error();
 
       const result: ViaCepResponse = await response.json();
+
+      if ("erro" in result) throw new Error();
+
       return {
         street: result.logradouro,
         city: result.localidade,

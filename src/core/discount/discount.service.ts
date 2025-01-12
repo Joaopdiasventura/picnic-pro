@@ -44,12 +44,11 @@ export class DiscountService {
 
   public async applyDiscount(
     item: string,
+    price: number,
     quantity: number,
   ): Promise<DiscountReturn> {
     if (quantity < 1)
       throw new BadRequestException("Quantidade de itens inválida");
-
-    const { price } = await this.findItem(item);
 
     const discounts = await this.discountRepository.findAllByItemSorted(item);
 
@@ -62,13 +61,15 @@ export class DiscountService {
           (operator == ">" && quantity > parsedQuantity) ||
           (operator == "<" && quantity < parsedQuantity);
 
-        if (isValidRule)
-          return Math.round((discount.value / 100) * price * 100) / 100;
+        if (isValidRule) return (discount.value / 100) * price;
       }
       return 0;
     })();
 
-    return { value: maxDiscount * quantity };
+    return {
+      value:
+        Math.round((price * quantity - maxDiscount * quantity) * 100) / 100,
+    };
   }
 
   public async update(

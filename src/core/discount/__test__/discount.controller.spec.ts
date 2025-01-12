@@ -22,7 +22,9 @@ describe("DiscountController", () => {
 
   const mockMessage: Message = { message: "Sucesso" };
 
-  const mockDiscountReturn: DiscountReturn = { value: 150 };
+  const mockDiscountReturn: DiscountReturn = {
+    value: 20 * 15 - (mockedDiscount.value * 20) / 100 * 15,
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -101,9 +103,9 @@ describe("DiscountController", () => {
 
   describe("applyDiscount", () => {
     it("should apply a discount", async () => {
-      const result = await controller.applyDiscount("item1", 15);
+      const result = await controller.applyDiscount("item1", 100, 15);
 
-      expect(service.applyDiscount).toHaveBeenCalledWith("item1", 15);
+      expect(service.applyDiscount).toHaveBeenCalledWith("item1", 100, 15);
       expect(result).toEqual(mockDiscountReturn);
     });
   });

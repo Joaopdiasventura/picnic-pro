@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { CreateItemDto } from "./dto/create-item.dto";
 import { UpdateItemDto } from "./dto/update-item.dto";
+import { UpdateManyItensDto } from "./dto/update-many-itens.dto";
 import { ItemRepository } from "./repositories/item.repository";
 import { ImageService } from "../../shared/services/image/image.service";
 import { Message } from "../../shared/interfaces/message";
@@ -55,7 +56,7 @@ export class ItemService {
   public async update(
     id: string,
     updateItemDto: UpdateItemDto,
-    file: Express.Multer.File,
+    file?: Express.Multer.File,
   ): Promise<Message> {
     const { name, category, pictureUrl } = await this.findById(id);
 
@@ -78,6 +79,12 @@ export class ItemService {
 
     await this.itemRepository.update(id, updateItemDto);
     return { message: "Item atualizado com sucesso" };
+  }
+
+  public async updateMany(
+    updateManyItensDto: UpdateManyItensDto[],
+  ): Promise<void> {
+    return await this.itemRepository.updateMany(updateManyItensDto);
   }
 
   public async delete(id: string): Promise<Message> {

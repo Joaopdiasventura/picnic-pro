@@ -49,12 +49,13 @@ export class DiscountController {
     return this.discountService.findManyByItem(item, page < 0 ? 0 : page);
   }
 
-  @Get("applyDiscount/:item/:quantity")
+  @Get("applyDiscount/:item/:price/:quantity")
   public applyDiscount(
     @Param("item", ParseObjectIdPipe) item: string,
+    @Param("price", ParseIntPipe) price: number,
     @Param("quantity", ParseIntPipe) quantity: number,
   ): Promise<DiscountReturn> {
-    return this.discountService.applyDiscount(item, quantity);
+    return this.discountService.applyDiscount(item, price, quantity);
   }
 
   @Patch(":id")
