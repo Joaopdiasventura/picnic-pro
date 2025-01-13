@@ -1,1 +1,6 @@
-export type OrderStatus = "pending" | "rejected" | "accepted" | "completed";
+export type OrderStatus =
+  | "pending"
+  | "cancelled"
+  | "rejected"
+  | "preparing"
+  | "completed";

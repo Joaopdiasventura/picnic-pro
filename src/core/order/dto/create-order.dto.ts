@@ -1,6 +1,5 @@
 import {
   IsArray,
-  IsDate,
   IsMongoId,
   IsNotEmpty,
   IsOptional,
@@ -10,7 +9,6 @@ import {
 import { Type } from "class-transformer";
 import { OrderItemDto } from "./order-item.dto";
 import { CreateAddressDto } from "../../../shared/services/address/dto/create-address.dto";
-import { Address } from "../../../shared/services/address/entities/address.entity";
 
 export class CreateOrderDto extends CreateAddressDto {
   @IsOptional()
@@ -24,11 +22,6 @@ export class CreateOrderDto extends CreateAddressDto {
   })
   user: string;
 
-  @IsNotEmpty({ message: "Digite uma data válida para a entrega do pedido" })
-  @IsDate({ message: "Digite uma data válida para a entrega do pedido" })
-  @Type(() => Date)
-  conclusionDate: Date;
-
   @IsArray({ message: "O campo 'items' deve ser um array" })
   @IsNotEmpty({ message: "O pedido precisa ter pelo menos um item" })
   @ValidateNested({ each: true })
@@ -37,5 +30,5 @@ export class CreateOrderDto extends CreateAddressDto {
 
   totalAmount: number;
 
-  address: Address;
+  address: string;
 }

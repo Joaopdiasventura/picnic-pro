@@ -3,6 +3,7 @@ import { CreateOrderDto } from "../dto/create-order.dto";
 import { UpdateOrderDto } from "../dto/update-order.dto";
 import { Order } from "../entities/order.entity";
 import { OrderRepository } from "./order.repository";
+import { OrderStatus } from "../../../shared/types/order-status";
 import { Model } from "mongoose";
 
 export class MongoOrderRepository implements OrderRepository {
@@ -18,19 +19,47 @@ export class MongoOrderRepository implements OrderRepository {
     return await this.orderModel.findById(id).exec();
   }
 
+  public async findByIdWithDetails(id: string): Promise<Order> {
+    return await this.orderModel
+      .findById(id)
+      .populate({
+        path: "user",
+        select: "name email",
+      })
+      .populate({
+        path: "items.item",
+        select: "name price pictureUrl",
+      })
+      .exec();
+  }
+
   public async findManyByUser(user: string, page: number): Promise<Order[]> {
     return await this.orderModel
       .find({ user })
       .skip(page * 10)
       .limit(10)
-      .populate({ path: "user", select: "name email" })
-      .populate({ path: "item", select: "name price pictureUrl" })
+      .populate({
+        path: "items.item",
+        select: "name price pictureUrl",
+      })
+      .exec();
+  }
+
+  public async findManyByItem(item: string, page: number): Promise<Order[]> {
+    return await this.orderModel
+      .find({ "items.item": item })
+      .skip(page * 10)
+      .limit(10)
+      .populate({
+        path: "user",
+        select: "name email",
+      })
       .exec();
   }
 
   public async update(
     id: string,
-    updateOrderDto: UpdateOrderDto,
+    updateOrderDto: UpdateOrderDto | { status: OrderStatus },
   ): Promise<Order> {
     return await this.orderModel.findByIdAndUpdate(id, updateOrderDto);
   }

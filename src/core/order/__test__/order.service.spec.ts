@@ -19,10 +19,6 @@ jest.mock("../../discount/discount.service");
 jest.mock("../../../shared/services/address/address.service");
 jest.mock("../repositories/order.mongo.repository");
 
-const twoWeeksFromToday = new Date();
-twoWeeksFromToday.setDate(twoWeeksFromToday.getDate() + 7);
-twoWeeksFromToday.setHours(0, 0, 0, 0);
-
 describe("OrderService", () => {
   let service: OrderService;
   let userService: UserService;
@@ -65,7 +61,6 @@ describe("OrderService", () => {
         service.create({
           user: "invalidUserId",
           items: [],
-          conclusionDate: twoWeeksFromToday,
           cep: "12345-678",
           number: "123",
         } as CreateOrderDto),
@@ -79,7 +74,6 @@ describe("OrderService", () => {
           { item: "item1", quantity: 1 },
           { item: "item1", quantity: 2 },
         ],
-        conclusionDate: twoWeeksFromToday,
         cep: "12345-678",
         number: "123",
       };
@@ -100,13 +94,17 @@ describe("OrderService", () => {
       const result = await service.create(createOrderDto as CreateOrderDto);
 
       expect(result.message).toBe("Pedido criado com sucesso");
+      expect(orderRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          items: [{ item: "item1", quantity: 3 }],
+        }),
+      );
     });
 
     it("should throw an error if item quantity is insufficient", async () => {
       const createOrderDto = {
         user: "validUserId",
         items: [{ item: "item1", quantity: 5 }],
-        conclusionDate: twoWeeksFromToday,
         cep: "12345-678",
         number: "123",
       };
@@ -125,7 +123,6 @@ describe("OrderService", () => {
       const createOrderDto = {
         user: "validUserId",
         items: [{ item: "item1", quantity: 2 }],
-        conclusionDate: twoWeeksFromToday,
         cep: "12345-678",
         number: "123",
       };
@@ -135,10 +132,11 @@ describe("OrderService", () => {
         id: "item1",
         quantity: 10,
         name: "Test Item",
+        price: 50,
       } as Item);
       jest
         .spyOn(discountService, "applyDiscount")
-        .mockResolvedValue({ value: 200 });
+        .mockResolvedValue({ value: 100 });
       jest
         .spyOn(addressService, "create")
         .mockResolvedValue({ id: "addressId" } as Address);
@@ -150,45 +148,10 @@ describe("OrderService", () => {
       expect(result.message).toBe("Pedido criado com sucesso");
       expect(orderRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          totalAmount: 200,
+          totalAmount: 100,
           address: "addressId",
         }),
       );
     });
-
-    it("should throw an error if the date is invalid", async () => {
-      const invalidDate = new Date();
-      invalidDate.setDate(invalidDate.getDate() + 3);
-    
-      const createOrderDto = {
-        user: "validUserId",
-        items: [{ item: "item1", quantity: 2 }],
-        conclusionDate: invalidDate,
-        cep: "12345-678",
-        number: "123",
-      };
-    
-      jest.spyOn(userService, "findById").mockResolvedValue({} as User);
-      jest.spyOn(itemService, "findById").mockResolvedValue({
-        id: "item1",
-        quantity: 10,
-        name: "Test Item",
-      } as Item);
-      jest
-        .spyOn(discountService, "applyDiscount")
-        .mockResolvedValue({ value: 200 });
-      jest
-        .spyOn(addressService, "create")
-        .mockResolvedValue({ id: "addressId" } as Address);
-      jest.spyOn(orderRepository, "create").mockResolvedValue({} as Order);
-      jest.spyOn(itemService, "updateMany").mockResolvedValue(undefined);
-    
-      await expect(service.create(createOrderDto as CreateOrderDto)).rejects.toThrow(
-        new BadRequestException(
-          "A data de conclusão do pedido deve ser até sete dias a partir de hoje",
-        ),
-      );
-    });
-    
   });
 });

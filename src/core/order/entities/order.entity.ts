@@ -16,9 +16,6 @@ export class Order extends Document {
   @Prop({ required: true })
   totalAmount: number;
 
-  @Prop({ required: true })
-  conclusionDate: Date;
-
   @Prop({ default: () => new Date() })
   createdAt: Date;
 

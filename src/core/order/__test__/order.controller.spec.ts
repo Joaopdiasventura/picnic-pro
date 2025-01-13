@@ -34,7 +34,6 @@ describe("OrderController", () => {
       const createOrderDto: CreateOrderDto = {
         user: "validUserId",
         items: [{ item: "item1", quantity: 2 }],
-        conclusionDate: new Date(),
         cep: "12345-678",
         number: "123",
       } as CreateOrderDto;
